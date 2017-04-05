@@ -181,6 +181,23 @@ int showsource(){
 
 	return TRUE;
 }
+int showbatt(){
+	pid_t c;
+	int ret;
+	if((c = fork()) == -1){
+		printf("error\n");
+		return FALSE;
+	}
+	if(c){
+		waitpid(c, &ret, 0);
+	} else {
+		char * oots[] = {"acpi", "acpi", 0};
+		execvp("acpi", oots);
+		exit(0);
+	}
+
+	return TRUE;
+}
 
 
 
@@ -190,6 +207,7 @@ int main(void){
 	loadusers("./users");
 	char last =' ';
 	while(TRUE){
+		showbatt();
 		printf("Main menu: Current user: %s\n\t0: Show source code\n\t1: List usernames\n\t2: login/change user\n\t3: Add a new user\n", curauth ? curauth->username : "NONE");
 		if(curauth)printf("\t4: Show notes\n\t5: Add a new note\n");
 		char t;
